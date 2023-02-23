@@ -8,17 +8,17 @@ import 'package:flutter/material.dart';
 // import 'package:flutter_screenutil/flutter_screenutil.dart';
 // import 'package:olga/screens/coach/coach_video_calling/feedback_screen.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:video_calling/screens/user_screen.dart';
 // import '../../../global/constants/images.dart';
 // import '../../../global/methods/methods.dart';
 
-const appId = "0fd692ba760242d0a5fb546672a40ae4";
-const token = "007eJxTYLissXlK30R1q+cbo1vPzdv8oUX9Pteeyxd3++n9mr+n9cRfBQaDtBQzS6OkRHMzAyMToxSDRNO0JFMTMzNzo0QTg8RUk5uy35MbAhkZetzWMTMyQCCIz8Lgn5OeyMAAAFgWItg=";
-const channel = "Olga";
+
 
 class VideoCallPage2 extends StatefulWidget {
-  static const String id = "/videoCall2";
-  const VideoCallPage2({Key? key}) : super(key: key);
-
+  final String appId;
+  final String token;
+  final String channel;
+  const VideoCallPage2({Key? key, required this.appId, required this.token, required this.channel}) : super(key: key);
   @override
   State<VideoCallPage2> createState() => _VideoCallPage2State();
 }
@@ -43,42 +43,43 @@ class _VideoCallPage2State extends State<VideoCallPage2> {
   @override
   void initState() {
     super.initState();
-    initAgora();
+    initAgora( widget.appId, widget.token, widget.channel);
   }
 
-//!##############################################################
-  Future<void> initAgora() async {
-    // retrieve permissions
-    await [Permission.microphone, Permission.camera].request();
+Future<void> initAgora(String appId, String token, String channel) async {
+  // retrieve permissions
+  await [Permission.microphone, Permission.camera].request();
 
-    //create the engine
-    _engine = await RtcEngine.create(appId);
-    await _engine.enableVideo();
-    _engine.setEventHandler(
-      RtcEngineEventHandler(
-        joinChannelSuccess: (String channel, int uid, int elapsed) {
-          print("local user $uid joined");
-          setState(() {
-            _localUserJoined = true;
-          });
-        },
-        userJoined: (int uid, int elapsed) {
-          print("remote user $uid joined");
-          setState(() {
-            _remoteUid = uid;
-          });
-        },
-        userOffline: (int uid, UserOfflineReason reason) {
-          print("remote user $uid left channel");
-          setState(() {
-            _remoteUid = null;
-          });
-        },
-      ),
-    );
+  //create the engine
+  _engine = await RtcEngine.create(appId);
+  await _engine.enableVideo();
+  _engine.setEventHandler(
+    RtcEngineEventHandler(
+      joinChannelSuccess: (String channel, int uid, int elapsed) {
+        print("local user $uid joined");
+        setState(() {
+          _localUserJoined = true;
+        });
+      },
+      userJoined: (int uid, int elapsed) {
+        print("remote user $uid joined");
+        setState(() {
+          _remoteUid = uid;
+        });
+      },
+      userOffline: (int uid, UserOfflineReason reason) {
+        print("remote user $uid left channel");
+        setState(() {
+          _remoteUid = null;
+        });
+      },
+    ),
+  );
 
-    await _engine.joinChannel(token, channel, null, 0);
-  }
+  await _engine.joinChannel(token, channel, null, 0);
+}
+
+
 //!##############################################################
 
   void _onCallEnd(BuildContext context) {

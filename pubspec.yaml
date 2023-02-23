@@ -40,6 +40,7 @@ dependencies:
   cloud_firestore: ^4.4.3
   agora_rtc_engine: ^5.2.0
   agora_uikit: ^1.0.2
+  connectycube_flutter_call_kit: ^2.2.2
 
 dev_dependencies:
   flutter_test:

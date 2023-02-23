@@ -1,3 +1,4 @@
+import 'package:connectycube_flutter_call_kit/connectycube_flutter_call_kit.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:video_calling/calling/video_call2.dart';
@@ -9,6 +10,8 @@ import 'package:video_calling/screens/user_screen.dart';
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  // Initialize ConnectyCubeFlutterCallKit SDK
+  await ConnectycubeFlutterCallKit();
   runApp(const MyApp());
 }
 
@@ -27,7 +30,6 @@ class MyApp extends StatelessWidget {
     '/registration': (context) => RegistrationScreen(),
     '/user': (context) => UserScreen(),
     '/coach': (context) => CoachScreen(),
-    '/videoCall2': (context) => VideoCallPage2(),
     },
       home:  LoginScreen(),
     );
